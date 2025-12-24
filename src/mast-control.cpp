@@ -1,3 +1,5 @@
+#include <Arduino.h>
+
 #define STATE_IDLE 1
 #define STATE_RISING 2
 #define STATE_LOWERING 3
@@ -46,6 +48,13 @@ MastConfig mast_1_config = {
 
 MastConfig masts[] = { mast_1_config };
 unsigned long last_time = 0;
+
+void state_step(MastConfig &mast, unsigned long delta_ms, unsigned long total_ms);
+void set_state(MastConfig &mast, int new_state);
+bool was_button_pressed(MastConfig &mast, int direction);
+void blink_led(MastConfig &mast, int direction, unsigned long total_ms);
+void initialize_mast(MastConfig config);
+
 
 void setup() {
   Serial.begin(9600);
