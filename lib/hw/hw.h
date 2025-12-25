@@ -1,0 +1,13 @@
+#pragma once
+#include <stdint.h>
+
+namespace HW {
+    enum class PinMode {
+        INPUT,
+        OUTPUT
+    };
+
+    void pinMode(uint8_t pin, PinMode mode);
+    void digitalWrite(uint8_t pin, bool value);
+    bool digitalRead(uint8_t pin);
+}
