@@ -1,6 +1,10 @@
 #include "virtual_hw.h"
+
+#include <cstdarg>
+#include <cstdio>
 #include <map>
 #include <stdexcept>
+#include <iostream>
 
 
 namespace {
@@ -8,9 +12,13 @@ namespace {
     std::map<uint8_t, bool> pinStates;
 }
 
-void reset_hw() {
+void resetHw() {
     pinModes.clear();
     pinStates.clear();
+}
+
+HW::PinMode getPinMode(uint8_t pin) {
+    return pinModes[pin];
 }
 
 void HW::pinMode(uint8_t pin, PinMode mode) {
@@ -18,17 +26,18 @@ void HW::pinMode(uint8_t pin, PinMode mode) {
 }
 
 void HW::digitalWrite(uint8_t pin, bool value) {
-    if (pinModes[pin] != PinMode::OUTPUT) {
-        throw std::runtime_error("Pin not set as OUTPUT");
-    }
-
     pinStates[pin] = value;
 }
 
 bool HW::digitalRead(uint8_t pin) {
-    if (pinModes[pin] != PinMode::OUTPUT) {
-        throw std::runtime_error("Pin not set as OUTPUT");
-    }
-
     return pinStates[pin] ?: false;
+}
+
+void HW::println(const char* fmt, ...) {
+    va_list args;
+    va_start(args, fmt);
+    char buffer[512];
+    vsnprintf(buffer, sizeof(buffer), fmt, args);
+    va_end(args);
+    std::cout << buffer << std::endl;
 }

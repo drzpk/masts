@@ -1,4 +1,5 @@
 #pragma once
 #include "hw.h"
 
-void reset_hw();
+void resetHw();
+HW::PinMode getPinMode(uint8_t pin);

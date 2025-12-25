@@ -1,17 +1,16 @@
 #include <unity.h>
 #include "led.h"
+#include "test_component.h"
 #include "../virtual_hw.h"
 
 LED led(13);
 
-void setUp() {
+void setUp_led() {
     led.initialize();
 }
 
-void tearDown() {
-}
-
 void test_led_initial_state() {
+    TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, getPinMode(13));
     TEST_ASSERT_FALSE(HW::digitalRead(13));
 }
 
@@ -44,11 +43,10 @@ void test_led_blink() {
     TEST_ASSERT_FALSE(HW::digitalRead(13));
 }
 
-int main(int argc, char **argv) {
-    UNITY_BEGIN();
+
+void run_led_tests() {
     RUN_TEST(test_led_initial_state);
     RUN_TEST(test_led_set_on);
     RUN_TEST(test_led_set_off);
     RUN_TEST(test_led_blink);
-    UNITY_END();
 }
