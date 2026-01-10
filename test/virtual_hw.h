@@ -2,4 +2,7 @@
 #include "hw.h"
 
 void resetHw();
-HW::PinMode getPinMode(uint8_t pin);
+
+namespace HW {
+    HW::PinMode getPinMode(uint8_t pin);
+}

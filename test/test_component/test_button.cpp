@@ -6,7 +6,7 @@
 void test_button_press() {
     Button btn(5);
     btn.initialize();
-    TEST_ASSERT_EQUAL(HW::PinMode::INPUT, getPinMode(5));
+    TEST_ASSERT_EQUAL(HW::PinMode::INPUT, HW::getPinMode(5));
 
     // Not pressed
     HW::digitalWrite(5, false);

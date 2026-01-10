@@ -18,7 +18,7 @@ void LED::initialize() {
 void LED::tick(int deltaMs) {
     if (_isBlinking) {
         _elapsedMs += deltaMs;
-        HW::digitalWrite(_port, (_elapsedMs / BLINK_DELAY_MS) % 2 != 0);
+        HW::digitalWrite(_port, (_elapsedMs / BLINK_DELAY_MS) % 2 == 0);
     }
 }
 

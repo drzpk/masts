@@ -10,7 +10,7 @@ void setUp_led() {
 }
 
 void test_led_initial_state() {
-    TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, getPinMode(13));
+    TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(13));
     TEST_ASSERT_FALSE(HW::digitalRead(13));
 }
 
@@ -30,10 +30,7 @@ void test_led_blink() {
     led.blink();
     TEST_ASSERT_FALSE(HW::digitalRead(13));
 
-    led.tick(blinkDelay - 1);
-    TEST_ASSERT_FALSE(HW::digitalRead(13));
-
-    led.tick(1);
+    led.tick(0);
     TEST_ASSERT_TRUE(HW::digitalRead(13));
 
     led.tick(blinkDelay - 1);
@@ -41,6 +38,12 @@ void test_led_blink() {
 
     led.tick(1);
     TEST_ASSERT_FALSE(HW::digitalRead(13));
+
+    led.tick(blinkDelay - 1);
+    TEST_ASSERT_FALSE(HW::digitalRead(13));
+
+    led.tick(1);
+    TEST_ASSERT_TRUE(HW::digitalRead(13));
 }
 
 

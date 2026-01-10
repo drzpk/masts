@@ -17,7 +17,7 @@ void resetHw() {
     pinStates.clear();
 }
 
-HW::PinMode getPinMode(uint8_t pin) {
+HW::PinMode HW::getPinMode(uint8_t pin) {
     return pinModes[pin];
 }
 

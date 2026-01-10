@@ -15,6 +15,7 @@ int main(int argc, char **argv) {
     UNITY_BEGIN();
     run_button_tests();
     run_led_tests();
+    run_mast_tests();
     UNITY_END();
     return 0;
 }
