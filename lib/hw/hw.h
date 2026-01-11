@@ -4,6 +4,7 @@
 namespace HW {
     enum class PinMode {
         INPUT,
+        INPUT_PULLUP,
         OUTPUT
     };
 
