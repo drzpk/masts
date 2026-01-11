@@ -4,7 +4,7 @@
 Button::Button(int pin) : _pin(pin), _prevState(false), _pressed(false) {}
 
 void Button::initialize() {
-    HW::pinMode(_pin, HW::PinMode::INPUT);
+    HW::pinMode(_pin, HW::PinMode::INPUT_PULLUP);
 }
 
 void Button::tick(int deltaMs) {
@@ -20,10 +20,4 @@ void Button::tick(int deltaMs) {
     }
 
     _prevState = currentState;
-}
-
-bool Button::wasPressed() {
-    bool was = _pressed;
-    _pressed = false;
-    return was;
 }

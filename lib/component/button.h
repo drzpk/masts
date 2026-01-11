@@ -6,7 +6,8 @@ class Button : public Component {
         Button(int pin);
         void initialize() override;
         void tick(int deltaMs) override;
-        bool wasPressed();
+        bool wasPressed() { return _pressed; }
+        void clearPress() { _pressed = false; }
 
     private:
         int _pin;

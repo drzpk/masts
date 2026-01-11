@@ -18,6 +18,9 @@ void Mast::initialize() {
     _downLed.initialize();
     _upButton.initialize();
     _downButton.initialize();
+
+    _upLed.setState(true);
+    _downLed.setState(true);
 }
 
 static const char* mastStateToString(MastState state);
@@ -63,6 +66,9 @@ void Mast::tick(int deltaMs) {
             }
             break;
     }
+
+    _upButton.clearPress();
+    _downButton.clearPress();
 }
 
 void Mast::setState(MastState newState) {

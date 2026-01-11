@@ -6,12 +6,13 @@
 void test_button_press() {
     Button btn(5);
     btn.initialize();
-    TEST_ASSERT_EQUAL(HW::PinMode::INPUT, HW::getPinMode(5));
+    TEST_ASSERT_EQUAL(HW::PinMode::INPUT_PULLUP, HW::getPinMode(5));
 
     // Not pressed
     HW::digitalWrite(5, false);
     btn.tick(0);
     TEST_ASSERT_FALSE(btn.wasPressed());
+    btn.clearPress();
 
     // Button pressed
     HW::digitalWrite(5, true);
@@ -22,6 +23,7 @@ void test_button_press() {
     HW::digitalWrite(5, false);
     btn.tick(0);
     TEST_ASSERT_TRUE(btn.wasPressed());
+    btn.clearPress();
     
     // Press was consumed
     TEST_ASSERT_FALSE(btn.wasPressed());

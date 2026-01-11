@@ -30,8 +30,8 @@ void test_mast_initial_conditions() {
     TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(testConfig.pinValveDown));
     TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(testConfig.pinLedUp));
     TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(testConfig.pinLedDown));
-    TEST_ASSERT_EQUAL(HW::PinMode::INPUT, HW::getPinMode(testConfig.pinButtonUp));
-    TEST_ASSERT_EQUAL(HW::PinMode::INPUT, HW::getPinMode(testConfig.pinButtonDown));
+    TEST_ASSERT_EQUAL(HW::PinMode::INPUT_PULLUP, HW::getPinMode(testConfig.pinButtonUp));
+    TEST_ASSERT_EQUAL(HW::PinMode::INPUT_PULLUP, HW::getPinMode(testConfig.pinButtonDown));
 }
 
 void test_mast_press_up_button() {
