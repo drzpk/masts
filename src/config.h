@@ -1,6 +1,9 @@
 #pragma once
-#include "../component/mast.h"
 #include <Arduino.h>
+#include "../component/mast.h"
+#include "../readout/readout.h"
+
+#define DEBUG_ANALOG_READOUT true
 
 MastConfig mast1Config = {
   .mastId = 1,
@@ -14,4 +17,11 @@ MastConfig mast1Config = {
   .lowerTimeMs = 2000
 };
 
-MastConfig mastConfigs[] = { mast1Config };
+Component* components[] = {
+  new Mast(mast1Config),
+#if DEBUG_ANALOG_READOUT
+  new Readout(A0),
+#endif
+};
+
+int componentCount = sizeof(components) / sizeof(Component*);

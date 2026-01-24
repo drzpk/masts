@@ -31,6 +31,10 @@ bool HW::digitalRead(uint8_t pin) {
     return ::digitalRead(pin) == HIGH;
 }
 
+int HW::analogRead(uint8_t pin) {
+    return ::analogRead(pin);
+}
+
 void HW::println(const char* fmt, ...) {
     initailizeSerialIfNeeded();
     

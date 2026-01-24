@@ -11,5 +11,6 @@ namespace HW {
     void pinMode(uint8_t pin, PinMode mode);
     void digitalWrite(uint8_t pin, bool value);
     bool digitalRead(uint8_t pin);
+    int analogRead(uint8_t pin);
     void println(const char* fmt, ...);
 }
