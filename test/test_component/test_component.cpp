@@ -5,6 +5,7 @@
 void setUp() {
     resetHw();
     setUp_led();
+    setUp_status_leds();
 }
 
 void tearDown() {
@@ -16,6 +17,7 @@ int main(int argc, char **argv) {
     run_button_tests();
     run_led_tests();
     run_mast_tests();
+    run_status_leds_tests();
     UNITY_END();
     return 0;
 }

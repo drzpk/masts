@@ -1,6 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include "../component/mast.h"
+#include "../component/status_leds.h"
 #include "../readout/readout.h"
 
 #define DEBUG_ANALOG_READOUT true
@@ -17,8 +18,21 @@ MastConfig mast1Config = {
   .lowerTimeMs = 2000
 };
 
+Mast mast1(mast1Config);
+
+const MastState* mastStates[] = {
+  &mast1.getState()
+};
+
+StatusLedsConfig statusLedsConfig = {
+  .pinStatusLed = LED_BUILTIN,
+  .mastStates = mastStates,
+  .mastCount = sizeof(mastStates) / sizeof(MastState*)
+};
+
 Component* components[] = {
-  new Mast(mast1Config),
+  &mast1,
+  new StatusLeds(statusLedsConfig),
 #if DEBUG_ANALOG_READOUT
   new Readout(A0),
 #endif

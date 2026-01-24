@@ -40,6 +40,7 @@ public:
     Mast(const MastConfig& config);
     void initialize() override;
     void tick(int deltaMs) override;
+    const MastState& getState() const { return _state; }
 
 private:
     MastConfig _config;
