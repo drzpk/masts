@@ -27,7 +27,7 @@ void test_led_set_off() {
 void test_led_blink() {
     auto blinkDelay = 400;
 
-    led.blink();
+    led.blink(blinkDelay);
     TEST_ASSERT_FALSE(HW::digitalRead(13));
 
     led.tick(0);

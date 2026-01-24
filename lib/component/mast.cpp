@@ -83,7 +83,7 @@ void Mast::setState(MastState newState) {
         case MastState::RISING:
             HW::digitalWrite(_config.pinValveUp, true);
             HW::digitalWrite(_config.pinValveDown, false);
-            _upLed.blink();
+            _upLed.blink(BTN_BLINK_INTERVAL_MS);
             _upLed.tick(0);
             _downLed.setState(false);
             _movementTimeLeftMillis = _config.raiseTimeMs;
@@ -92,7 +92,7 @@ void Mast::setState(MastState newState) {
             HW::digitalWrite(_config.pinValveUp, false);
             HW::digitalWrite(_config.pinValveDown, true);
             _upLed.setState(false);
-            _downLed.blink();
+            _downLed.blink(BTN_BLINK_INTERVAL_MS);
             _downLed.tick(0);
             _movementTimeLeftMillis = _config.lowerTimeMs;
             break;

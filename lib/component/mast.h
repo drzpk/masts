@@ -6,7 +6,7 @@
 
 
 namespace {
-    constexpr int BLINK_INTERVAL_MS = 400;
+    constexpr int BTN_BLINK_INTERVAL_MS = 400;
     constexpr int TICK_TIME_MS = 10;
 }
 
