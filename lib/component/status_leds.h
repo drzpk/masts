@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 namespace {
-    constexpr int STATUS_LED_BLINK_INTERVAL_MS = 200;
+    constexpr int STATUS_LED_BLINK_INTERVAL_MS = 100;
 }
 
 struct StatusLedsConfig {

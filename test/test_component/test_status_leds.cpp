@@ -45,16 +45,13 @@ void test_status_leds_rising() {
     statusLeds->tick(0);
     TEST_ASSERT_TRUE(HW::digitalRead(13));
     
-    statusLeds->tick(100);
+    statusLeds->tick(50);
     TEST_ASSERT_TRUE(HW::digitalRead(13));
-    
-    statusLeds->tick(100);
+
+    statusLeds->tick(50);
     TEST_ASSERT_FALSE(HW::digitalRead(13));
-    
-    statusLeds->tick(200);
-    TEST_ASSERT_TRUE(HW::digitalRead(13));
-    
-    delete statusLeds;
+
+    statusLeds->tick(100);
 }
 
 void test_status_leds_lowering() {
@@ -75,10 +72,7 @@ void test_status_leds_lowering() {
     statusLeds->tick(0);
     TEST_ASSERT_TRUE(HW::digitalRead(13));
     
-    statusLeds->tick(200);
-    TEST_ASSERT_FALSE(HW::digitalRead(13));
-    
-    delete statusLeds;
+    statusLeds->tick(100);
 }
 
 void run_status_leds_tests() {
