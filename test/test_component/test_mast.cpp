@@ -15,16 +15,34 @@ const MastConfig testConfig = {
     .lowerTimeMs = 600
 };
 
-void pressButton(Mast& mast, int pin) {
-    HW::digitalWrite(pin, true);
-    mast.tick(10);
+void initializeMast(Mast& mast) {
+    // Buttons work in pull-up mode, and signals must be reversed 
+    HW::digitalWrite(testConfig.pinButtonUp, true);
+    HW::digitalWrite(testConfig.pinButtonDown, true);
+    mast.initialize();
+}
+
+void pressButtonLong(Mast& mast, int pin) {
     HW::digitalWrite(pin, false);
+    mast.tick(0);
+    mast.tick(3000); // Hold for 3 seconds to trigger long press
+}
+
+void releaseButton(Mast& mast, int pin) {
+    HW::digitalWrite(pin, true);
+    mast.tick(0);
+}
+
+void pressButtonShort(Mast& mast, int pin) {
+    HW::digitalWrite(pin, false);
+    mast.tick(10);
+    HW::digitalWrite(pin, true);
     mast.tick(0);
 }
 
 void test_mast_initial_conditions() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
     
     TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(testConfig.pinValveUp));
     TEST_ASSERT_EQUAL(HW::PinMode::OUTPUT, HW::getPinMode(testConfig.pinValveDown));
@@ -36,9 +54,9 @@ void test_mast_initial_conditions() {
 
 void test_mast_press_up_button() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
     
-    pressButton(mast, testConfig.pinButtonUp);
+    pressButtonShort(mast, testConfig.pinButtonUp);
 
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
@@ -61,9 +79,9 @@ void test_mast_press_up_button() {
 
 void test_mast_press_up_button_leds() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
 
-    pressButton(mast, testConfig.pinButtonUp);
+    pressButtonShort(mast, testConfig.pinButtonUp);
 
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinLedUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinLedDown));
@@ -96,9 +114,9 @@ void test_mast_press_up_button_leds() {
 
 void test_mast_press_down_button() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
     
-    pressButton(mast, testConfig.pinButtonDown);
+    pressButtonShort(mast, testConfig.pinButtonDown);
 
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveDown));
@@ -121,9 +139,9 @@ void test_mast_press_down_button() {
 
 void test_mast_press_down_button_leds() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
 
-    pressButton(mast, testConfig.pinButtonDown);
+    pressButtonShort(mast, testConfig.pinButtonDown);
 
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinLedUp));
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinLedDown));
@@ -141,10 +159,10 @@ void test_mast_press_down_button_leds() {
 
 void test_mast_press_interrupt() {
     Mast mast(testConfig);
-    mast.initialize();
+    initializeMast(mast);
 
     // Start raising the mast
-    pressButton(mast, testConfig.pinButtonUp);
+    pressButtonShort(mast, testConfig.pinButtonUp);
 
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
@@ -155,7 +173,7 @@ void test_mast_press_interrupt() {
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
 
     // Interrupt with down button
-    pressButton(mast, testConfig.pinButtonDown);
+    pressButtonShort(mast, testConfig.pinButtonDown);
 
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
@@ -163,14 +181,14 @@ void test_mast_press_interrupt() {
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinLedDown));
 
     // Start over with raising the mast
-    pressButton(mast, testConfig.pinButtonUp);
+    pressButtonShort(mast, testConfig.pinButtonUp);
     mast.tick(800);
 
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
     
     // Interrupt again, this time with up button
-    pressButton(mast, testConfig.pinButtonUp);
+    pressButtonShort(mast, testConfig.pinButtonUp);
 
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
@@ -178,7 +196,7 @@ void test_mast_press_interrupt() {
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinLedDown));
 
     // Now start lowering the mast
-    pressButton(mast, testConfig.pinButtonDown);
+    pressButtonShort(mast, testConfig.pinButtonDown);
 
     TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveDown));
@@ -196,6 +214,46 @@ void test_mast_press_interrupt() {
     TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinLedDown));
 }
 
+void test_mast_long_press_forced_up() {
+    Mast mast(testConfig);
+    initializeMast(mast);
+
+    pressButtonLong(mast, testConfig.pinButtonUp);
+
+    TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
+
+    mast.tick(10000);
+
+    TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
+
+    releaseButton(mast, testConfig.pinButtonUp);
+
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
+}
+
+void test_mast_long_press_forced_down() {
+    Mast mast(testConfig);
+    initializeMast(mast);
+
+    pressButtonLong(mast, testConfig.pinButtonDown);
+
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveDown));
+
+    mast.tick(10000);
+
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_TRUE(HW::digitalRead(testConfig.pinValveDown));
+
+    releaseButton(mast, testConfig.pinButtonDown);
+
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveUp));
+    TEST_ASSERT_FALSE(HW::digitalRead(testConfig.pinValveDown));
+}
+
 void run_mast_tests() {
     RUN_TEST(test_mast_initial_conditions);
     RUN_TEST(test_mast_press_up_button);
@@ -203,4 +261,6 @@ void run_mast_tests() {
     RUN_TEST(test_mast_press_down_button);
     RUN_TEST(test_mast_press_down_button_leds);
     RUN_TEST(test_mast_press_interrupt);
+    RUN_TEST(test_mast_long_press_forced_up);
+    RUN_TEST(test_mast_long_press_forced_down);
 }

@@ -28,7 +28,8 @@ void StatusLeds::tick(int deltaMs) {
 bool StatusLeds::isAnyMastMoving() const {
     for (int i = 0; i < _config.mastCount; ++i) {
         const MastState* state = _config.mastStates[i];
-        if (state && (*state == MastState::RISING || *state == MastState::LOWERING)) {
+        if (state && (*state == MastState::RISING || *state == MastState::LOWERING 
+            || *state == MastState::RISING_FORCED || *state == MastState::LOWERING_FORCED)) {
             return true;
         }
     }

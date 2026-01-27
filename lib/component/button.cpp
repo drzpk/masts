@@ -8,7 +8,7 @@ void Button::initialize() {
 }
 
 void Button::tick(int deltaMs) {
-    bool currentState = HW::digitalRead(_pin);
+    bool currentState = !HW::digitalRead(_pin);
 
      if (!_longPressed) {
         _pressed = _prevState && !currentState;

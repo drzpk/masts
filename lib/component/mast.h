@@ -6,7 +6,8 @@
 
 
 namespace {
-    constexpr int BTN_BLINK_INTERVAL_MS = 400;
+    constexpr int BTN_BLINK_INTERVAL_NORMAL_MS = 400;
+    constexpr int BTN_BLINK_INTERVAL_FORCED_MS = 90;
     constexpr int TICK_TIME_MS = 10;
 }
 
@@ -15,7 +16,9 @@ enum class MastState {
     RISING,
     LOWERING,
     UP,
-    DOWN
+    DOWN,
+    RISING_FORCED,
+    LOWERING_FORCED
 };
 
 enum class MastButtonDirection {

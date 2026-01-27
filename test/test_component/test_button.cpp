@@ -9,20 +9,20 @@ void test_button_short_press() {
     TEST_ASSERT_EQUAL(HW::PinMode::INPUT_PULLUP, HW::getPinMode(5));
 
     // Not pressed
-    HW::digitalWrite(5, false);
+    HW::digitalWrite(5, true);
     btn.tick(0);
     TEST_ASSERT_FALSE(btn.wasPressed());
     TEST_ASSERT_FALSE(btn.isLongPressed());
     btn.clearPress();
 
     // Button pressed
-    HW::digitalWrite(5, true);
+    HW::digitalWrite(5, false);
     btn.tick(0);
     TEST_ASSERT_FALSE(btn.wasPressed());
     TEST_ASSERT_FALSE(btn.isLongPressed());
     
     // Button released (short press)
-    HW::digitalWrite(5, false);
+    HW::digitalWrite(5, true);
     btn.tick(0);
     TEST_ASSERT_TRUE(btn.wasPressed());
     TEST_ASSERT_FALSE(btn.isLongPressed());
@@ -38,7 +38,7 @@ void test_button_long_press() {
     btn.initialize();
 
     // Button pressed down
-    HW::digitalWrite(5, true);
+    HW::digitalWrite(5, false);
     btn.tick(0);
     TEST_ASSERT_FALSE(btn.wasPressed());
     TEST_ASSERT_FALSE(btn.isLongPressed());
@@ -54,7 +54,7 @@ void test_button_long_press() {
     TEST_ASSERT_TRUE(btn.isLongPressed());
 
     // Button released after long press
-    HW::digitalWrite(5, false);
+    HW::digitalWrite(5, true);
     btn.tick(0);
     TEST_ASSERT_FALSE(btn.wasPressed()); // Should still be false
     TEST_ASSERT_FALSE(btn.isLongPressed());

@@ -68,7 +68,7 @@ void test_status_leds_lowering() {
     statusLeds = new StatusLeds(config);
     statusLeds->initialize();
     
-    state2 = MastState::LOWERING;
+    state2 = MastState::LOWERING_FORCED;
     statusLeds->tick(0);
     TEST_ASSERT_TRUE(HW::digitalRead(13));
     

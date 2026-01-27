@@ -37,16 +37,28 @@ void Mast::tick(int deltaMs) {
                 setState(MastState::RISING);
             } else if (_downButton.wasPressed()) {
                 setState(MastState::LOWERING);
+            } else if (_upButton.isLongPressed()) {
+                setState(MastState::RISING_FORCED);
+            } else if (_downButton.isLongPressed()) {
+                setState(MastState::LOWERING_FORCED);
             }
             break;
         case MastState::UP:
             if (_downButton.wasPressed()) {
                 setState(MastState::LOWERING);
+            } else if (_downButton.isLongPressed()) {
+                setState(MastState::LOWERING_FORCED);
+            } else if (_upButton.isLongPressed()) {
+                setState(MastState::RISING_FORCED);
             }
             break;
         case MastState::DOWN:
             if (_upButton.wasPressed()) {
                 setState(MastState::RISING);
+            } else if (_upButton.isLongPressed()) {
+                setState(MastState::RISING_FORCED);
+            } else if (_downButton.isLongPressed()) {
+                setState(MastState::LOWERING_FORCED);
             }
             break;
         case MastState::RISING:
@@ -62,6 +74,16 @@ void Mast::tick(int deltaMs) {
             if (_movementTimeLeftMillis <= 0) {
                 setState(MastState::DOWN);
             } else if (_upButton.wasPressed() || _downButton.wasPressed()) {
+                setState(MastState::IDLE);
+            }
+            break;
+        case MastState::RISING_FORCED:
+            if (!_upButton.isLongPressed()) {
+                setState(MastState::IDLE);
+            }
+            break;
+        case MastState::LOWERING_FORCED:
+            if (!_downButton.isLongPressed()) {
                 setState(MastState::IDLE);
             }
             break;
@@ -83,7 +105,7 @@ void Mast::setState(MastState newState) {
         case MastState::RISING:
             HW::digitalWrite(_config.pinValveUp, true);
             HW::digitalWrite(_config.pinValveDown, false);
-            _upLed.blink(BTN_BLINK_INTERVAL_MS);
+            _upLed.blink(BTN_BLINK_INTERVAL_NORMAL_MS);
             _upLed.tick(0);
             _downLed.setState(false);
             _movementTimeLeftMillis = _config.raiseTimeMs;
@@ -92,7 +114,7 @@ void Mast::setState(MastState newState) {
             HW::digitalWrite(_config.pinValveUp, false);
             HW::digitalWrite(_config.pinValveDown, true);
             _upLed.setState(false);
-            _downLed.blink(BTN_BLINK_INTERVAL_MS);
+            _downLed.blink(BTN_BLINK_INTERVAL_NORMAL_MS);
             _downLed.tick(0);
             _movementTimeLeftMillis = _config.lowerTimeMs;
             break;
@@ -108,6 +130,18 @@ void Mast::setState(MastState newState) {
             _upLed.setState(false);
             _downLed.setState(true);
             break;
+        case MastState::RISING_FORCED:
+            HW::digitalWrite(_config.pinValveUp, true);
+            HW::digitalWrite(_config.pinValveDown, false);
+            _upLed.blink(BTN_BLINK_INTERVAL_FORCED_MS);
+            _upLed.tick(0);
+            break;
+        case MastState::LOWERING_FORCED:
+            HW::digitalWrite(_config.pinValveUp, false);
+            HW::digitalWrite(_config.pinValveDown, true);
+            _downLed.blink(BTN_BLINK_INTERVAL_FORCED_MS);
+            _downLed.tick(0);
+            break;
     }
     _state = newState;
 }
@@ -119,6 +153,8 @@ static const char* mastStateToString(MastState state) {
         case MastState::LOWERING: return "LOWERING";
         case MastState::UP: return "UP";
         case MastState::DOWN: return "DOWN";
+        case MastState::RISING_FORCED: return "RISING_FORCED";
+        case MastState::LOWERING_FORCED: return "LOWERING_FORCED";
         default: return "UNKNOWN";
     }
 }
